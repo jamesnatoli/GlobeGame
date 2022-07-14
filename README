@@ -4,3 +4,6 @@ A simple game to find countries on a blank map
 2) Two dots appear, which are two countries
 3) You are asked to click on a third country
 4) Score is based on how close
+
+TO RUN:
+python sketchPad.py
