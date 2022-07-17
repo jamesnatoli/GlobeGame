@@ -7,3 +7,6 @@ A simple game to find countries on a blank map
 
 TO RUN:
 python sketchPad.py
+
+Main Tasks:
+1) Transform pixel coords to Robinson Projection
