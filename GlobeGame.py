@@ -5,19 +5,31 @@ from PIL import ImageTk, Image
 import random
 import time
 
+# Sizing
+WIDTH = 1200
+HEIGHT = int(WIDTH * 0.516)
+
 # Sketchpad is a subclass of Canvas, and so inherits all the data
 class Sketchpad(Canvas):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
+
+        # Setup
         self.resultsContents = StringVar()
         self.resultsContents.set("Beginning...")
         self.create_label( parent)
+        self.create_button( parent)
         
         # Bindings
         self.bind("<Button-1>", self.save_posn)
-        self.draw_ovals()
+        self.draw_random_ovals()
 
-    def draw_ovals( self):
+    def draw_ovals( self, event):
+        rx = self.lastx / 2
+        ry = self.lasty / 2
+        self.create_oval( rx, ry, rx + 5, ry + 5, fill='blue', outline='red')
+        
+    def draw_random_ovals( self):
         rx = random.randrange( 745)
         ry = random.randrange( 427)
         self.create_oval( rx, ry, rx + 5, ry + 5, fill='red', outline='blue')
@@ -44,11 +56,16 @@ class Sketchpad(Canvas):
         self.lastx, self.lasty = event.x, event.y
         # sneaky way to do multiple bindings i guess...
         self.update_label()
-        self.draw_ovals()
+        # self.draw_random_ovals( )
+        self.draw_ovals( event)
         
     def add_line(self, event):
         self.create_line((self.lastx, self.lasty, event.x, event.y))
         self.save_posn(event)
+
+    def create_button(self, parent):
+        self.close_button = ttk.Button(parent, text='Close!', command= root.destroy)
+        self.close_button.grid( column=1, row=0, sticky=( S))
 
 root = Tk()
 root.columnconfigure(0, weight=1)
@@ -57,10 +74,10 @@ root.rowconfigure(0, weight=1)
 mainframe = ttk.Frame( root, padding="12 12 12 12")
 mainframe.grid( column=0, row=0, sticky=( N, W, E, S))
 
-sketch = Sketchpad( mainframe, width=1010, height=525)
+sketch = Sketchpad( mainframe, width=(WIDTH + 10), height=(HEIGHT + 10))
 sketch.grid(column=0, row=0, sticky=(N, W, E, S))
 
-myimg = ImageTk.PhotoImage(Image.open('imgs/Blank_map_of_the_world.jpg').resize( (1000, 516)))
+myimg = ImageTk.PhotoImage(Image.open('imgs/Blank_map_of_the_world.jpg').resize( (WIDTH, HEIGHT)))
 sketch.create_image(10, 10, image=myimg, anchor='nw')
 # sketch.create_oval(10, 10, 15, 15, fill='red', outline='blue')
 
